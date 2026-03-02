@@ -1,0 +1,47 @@
+package springboot_sns.config;
+
+import com.pebble.springboot_sns.config.StorageConfig;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
+import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.S3Configuration;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
+
+import java.net.URI;
+
+@Configuration
+@EnableConfigurationProperties(StorageConfig.class)
+@RequiredArgsConstructor
+public class S3Config {
+
+    private final StorageConfig storageConfig;
+
+    @Bean
+    public S3Client s3Client() {
+        return S3Client.builder()
+                .endpointOverride(URI.create(storageConfig.endpoint()))
+                .region(Region.of(storageConfig.region()))
+                .credentialsProvider(StaticCredentialsProvider.create(
+                        AwsBasicCredentials.create(storageConfig.accessKey(), storageConfig.secretKey())))
+                .forcePathStyle(true)
+                .build();
+    }
+
+    @Bean
+    public S3Presigner s3Presigner() {
+        return S3Presigner.builder()
+                .endpointOverride(URI.create(storageConfig.endpoint()))
+                .region(Region.of(storageConfig.region()))
+                .credentialsProvider(StaticCredentialsProvider.create(
+                        AwsBasicCredentials.create(storageConfig.accessKey(), storageConfig.secretKey())))
+                .serviceConfiguration(S3Configuration.builder()
+                        .pathStyleAccessEnabled(true)
+                        .build())
+                .build();
+    }
+}

@@ -1,0 +1,38 @@
+post:
+  view:
+    key-prefix: "post:view:"
+    dirty-set-key: "post:view:dirty_set"
+    sync-interval: 60000
+
+timeline:
+  key-prefix: "timeline:"
+  max-size: 1000
+  celeb-threshold: 10000
+  celeb-post-limit: 50
+
+storage:
+  endpoint: "http://localhost:9000"
+  access-key: "rustfsadmin"
+  secret-key: "rustfsadmin"
+  bucket: "media"
+  region: "ap-northeast-2"
+
+spring:
+  application:
+    name: springboot-sns
+  datasource:
+    url: jdbc:postgresql://localhost:5432/snsdb
+    username: sns
+    password: sns
+    driver-class-name: org.postgresql.Driver
+  data:
+    redis:
+      host: localhost
+      port: 6379
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect

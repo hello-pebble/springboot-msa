@@ -1,0 +1,55 @@
+name: springbootSNS
+
+services:
+  redis:
+    image: redis:7
+    container_name: snsredis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  postgres:
+    image: postgres:17
+    container_name: snsdb
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: snsdb
+      POSTGRES_USER: sns
+      POSTGRES_PASSWORD: sns
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sns -d sns"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  rustfs:
+    image: rustfs/rustfs:1.0.0-alpha.82
+    container_name: snsrustfs
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      RUSTFS_ROOT_USER: rustfsadmin
+      RUSTFS_ROOT_PASSWORD: rustfsadmin
+    volumes:
+      - rustfs-data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  redis-data:
+  postgres-data:
+  rustfs-data:
+

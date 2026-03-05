@@ -1,6 +1,4 @@
-package com.pebble.springboot_sns.domain.user;
-
-import com.pebble.springboot_sns.domain.common.DomainException;
+package com.pebble.user.domain;
 
 public class UserException extends DomainException {
 

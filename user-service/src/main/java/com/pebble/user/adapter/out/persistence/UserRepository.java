@@ -1,5 +1,6 @@
-package com.pebble.springboot_sns.domain.user;
+package com.pebble.user.adapter.out.persistence;
 
+import com.pebble.user.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

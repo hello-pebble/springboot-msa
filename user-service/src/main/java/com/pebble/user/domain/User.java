@@ -1,28 +1,30 @@
 package com.pebble.user.domain;
 
-import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import lombok.Getter;
+import lombok.AllArgsConstructor;
 
-@Entity
-@Table(name = "users")
 @Getter
+@AllArgsConstructor
 public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column(nullable = false, unique = true, length = 30)
     private String username;
-
-    @Column(nullable = false, length = 255)
     private String password;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
+    private LocalDateTime deletedAt;
 
-    protected User() {
+    // 비지니스 규칙
+    public void delete() {
+        this.deletedAt = LocalDateTime.now();
     }
 
-    public User(String username, String password) {
-        this.username = username;
-        this.password = password;
+    public void restore() {
+        this.deletedAt = null;
     }
+
+    public boolean isDeleted() {
+        return this.deletedAt != null;
+    }
+
 }

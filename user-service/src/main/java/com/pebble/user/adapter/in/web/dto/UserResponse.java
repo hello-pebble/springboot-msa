@@ -1,6 +1,6 @@
-package com.pebble.springboot_sns.controller.dto;
+package com.pebble.user.adapter.in.web.dto;
 
-import com.pebble.springboot_sns.domain.user.User;
+import com.pebble.user.domain.User;
 
 public record UserResponse(
         Long id,

@@ -34,4 +34,52 @@ com.pebble.user
 │   └── service                 # 비즈니스 로직 실행 (포트 구현)
 │       └── UserService.java
 └── domain                      # 순수 비즈니스 객체
-└── User.java
+    └── User.java
+
+구조 흐름
+Controller
+↓
+UseCase
+↓
+Application Service
+↓
+Port(out)
+↓
+Persistence Adapter
+↓
+JPA Repository
+
+UserEntity → User
+User → UserEntity 따라서 Mapper가 변환해줘야함.
+
+
+DB
+↓
+UserEntity
+↓ (Mapper)
+User (Domain)
+↓
+Application Service
+DB 저장
+User (Domain)
+↓ (Mapper)
+UserEntity
+↓
+DB
+
+
+Port (interface)   컨트롤러가 호출하는 인터페이스
+input port
+    RegisterUserUseCase
+    UpdateProfileUseCase
+
+
+output port  DB 접근 인터페이스
+    LoadUserPort
+    SaveUserPort
+
+
+
+application Service UseCase 구현
+    UserService
+

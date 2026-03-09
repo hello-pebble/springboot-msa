@@ -1,13 +1,10 @@
 package com.pebble.user.adapter.out.persistence;
 
-import com.pebble.user.domain.User;
 import jakarta.persistence.*;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 
@@ -15,6 +12,9 @@ import java.time.LocalDateTime;
 @Table(name = "users")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
+@EntityListeners(AuditingEntityListener.class)
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +26,7 @@ public class UserEntity {
     private String password;
 
     @CreatedDate
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @LastModifiedDate
@@ -33,21 +34,4 @@ public class UserEntity {
     private LocalDateTime updatedAt;
 
     private LocalDateTime deletedAt;
-
-    // 도메인 객체로 변환하는 메서드 (Mapping)
-    public User toDomain() {
-        return new User(id, username, password, createdAt, null, deletedAt);
-    }
-
-    // 도메인 객체로부터 엔티티를 생성하는 메서드
-    public static UserEntity fromDomain(User user) {
-        UserEntity entity = new UserEntity();
-        entity.id = user.getId();
-        entity.username = user.getUsername();
-        entity.password = user.getPassword();
-        entity.createdAt = user.getCreatedAt();
-        entity.updatedAt = user.getUpdatedAt();
-        entity.deletedAt = user.getDeletedAt();
-        return entity;
-    }
 }

@@ -1,3 +1,6 @@
+server:
+  port: 8082
+
 post:
   view:
     key-prefix: "post:view:"

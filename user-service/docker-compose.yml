@@ -3,11 +3,11 @@ name: springbootSNS
 services:
   postgres:
     image: postgres:17
-    container_name: userdb
+    container_name: snsdb
     ports:
       - "5432:5432"
     environment:
-      POSTGRES_DB: userdb
+      POSTGRES_DB: snsdb
       POSTGRES_USER: sns
       POSTGRES_PASSWORD: sns
     volumes:
@@ -26,7 +26,7 @@ services:
     ports:
       - "8081:8081"
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://userdb:5432/userdb
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://userdb:5432/snsdb
       - SPRING_DATASOURCE_USERNAME=sns
       - SPRING_DATASOURCE_PASSWORD=sns
       - SPRING_JPA_HIBERNATE_DDL_AUTO=update

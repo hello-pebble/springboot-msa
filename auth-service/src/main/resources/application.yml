@@ -1,0 +1,21 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: auth-service
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: "YOUR_GOOGLE_CLIENT_ID"
+            client-secret: "YOUR_GOOGLE_CLIENT_SECRET"
+            scope:
+              - profile
+              - email
+
+jwt:
+  secret: "super-secret-long-key-for-jwt-signing-purpose-that-is-at-least-256-bits-long-and-should-be-replaced"
+  access-token-expiration-seconds: 3600 # 1 hour
+  refresh-token-expiration-seconds: 604800 # 7 days

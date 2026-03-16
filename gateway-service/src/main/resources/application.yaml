@@ -1,0 +1,40 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      globalcors:
+        cors-configurations:
+          '[/**]':
+            allowedOrigins: "http://localhost:3000"
+            allowedMethods:
+              - GET
+              - POST
+              - PUT
+              - DELETE
+              - OPTIONS
+            allowedHeaders: "*"
+            allowCredentials: true
+      routes:
+        # User Service Route
+        - id: user-service
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/v1/users/**, /api/v1/login
+
+        # User Service 'me' API Route
+        - id: user-service-me
+          uri: http://localhost:8081
+          predicates:
+            - Path=/api/v1/me/**
+          filters:
+            - RewritePath=/api/v1/me(?<segment>/?.*), /api/v1/users/me${segment}
+
+        # Core Service Route (Fallback for all other requests)
+        - id: core-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/**

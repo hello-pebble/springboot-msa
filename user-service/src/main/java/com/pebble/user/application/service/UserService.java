@@ -1,5 +1,6 @@
 package com.pebble.user.application.service;
 
+import com.pebble.user.application.port.in.ProfileUseCase;
 import com.pebble.user.application.port.in.UserUseCase;
 import com.pebble.user.application.port.out.LoadUserPort;
 import com.pebble.user.application.port.out.SaveUserPort;
@@ -20,7 +21,7 @@ public class UserService implements UserUseCase {
     private final LoadUserPort loadUserPort;
     private final SaveUserPort saveUserPort;
     private final PasswordEncoder passwordEncoder;
-    // private final ProfileService profileService; // TODO: handle inter-service call or event
+    private final ProfileUseCase profileUseCase;
 
     @Override
     @Transactional
@@ -33,9 +34,21 @@ public class UserService implements UserUseCase {
         User user = new User(username, encodedPassword);
         User savedUser = saveUserPort.save(user);
 
-        // profileService.initialize(savedUser); // This should be handled via event or inter-service call
+        profileUseCase.initialize(savedUser.getId(), username);
 
         return savedUser;
+    }
+
+    @Override
+    @Transactional
+    public User findOrCreate(String provider, String providerId, String email, String displayName, String profileImageUrl) {
+        return loadUserPort.findByProviderAndProviderId(provider, providerId)
+                .orElseGet(() -> {
+                    User user = new User(email, provider, providerId);
+                    User savedUser = saveUserPort.save(user);
+                    profileUseCase.initialize(savedUser.getId(), displayName);
+                    return savedUser;
+                });
     }
 
     @Override

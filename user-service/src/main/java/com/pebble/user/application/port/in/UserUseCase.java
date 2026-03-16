@@ -6,6 +6,7 @@ import java.util.List;
 
 public interface UserUseCase {
     User signUp(String username, String password);
+    User findOrCreate(String provider, String providerId, String email, String displayName, String profileImageUrl);
     User findByUsername(String username);
     User findById(Long id);
     List<User> findAll();

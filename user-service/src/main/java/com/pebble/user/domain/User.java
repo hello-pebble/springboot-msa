@@ -13,8 +13,10 @@ import lombok.AccessLevel;
 @Builder
 public class User {
     private Long id;
-    private String username;
-    private String password;
+    private String username; // This will likely store the email
+    private String password; // Can be null for OAuth2 users
+    private String provider; // e.g., "local", "google"
+    private String providerId; // Unique ID from the provider
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private LocalDateTime deletedAt;
@@ -22,6 +24,13 @@ public class User {
     public User(String username, String password) {
         this.username = username;
         this.password = password;
+        this.provider = "local";
+    }
+
+    public User(String username, String provider, String providerId) {
+        this.username = username;
+        this.provider = provider;
+        this.providerId = providerId;
     }
 
     // 비지니스 규칙

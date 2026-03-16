@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @PersistenceAdapter
 @RequiredArgsConstructor
@@ -17,17 +18,27 @@ public class UserPersistenceAdapter implements LoadUserPort, SaveUserPort {
 
     @Override
     public Optional<User> findByUsername(String username) {
-        return userRepository.findByUsernameAndDeletedAtIsNull(username);
+        return userRepository.findByUsernameAndDeletedAtIsNull(username)
+                .map(UserMapper::toDomain);
     }
 
     @Override
     public Optional<User> findById(Long id) {
-        return userRepository.findByIdAndDeletedAtIsNull(id);
+        return userRepository.findByIdAndDeletedAtIsNull(id)
+                .map(UserMapper::toDomain);
+    }
+
+    @Override
+    public Optional<User> findByProviderAndProviderId(String provider, String providerId) {
+        return userRepository.findByProviderAndProviderIdAndDeletedAtIsNull(provider, providerId)
+                .map(UserMapper::toDomain);
     }
 
     @Override
     public List<User> findAll() {
-        return userRepository.findAll();
+        return userRepository.findAll().stream()
+                .map(UserMapper::toDomain)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -37,6 +48,8 @@ public class UserPersistenceAdapter implements LoadUserPort, SaveUserPort {
 
     @Override
     public User save(User user) {
-        return userRepository.save(user);
+        UserEntity entity = UserMapper.toEntity(user);
+        UserEntity savedEntity = userRepository.save(entity);
+        return UserMapper.toDomain(savedEntity);
     }
 }
